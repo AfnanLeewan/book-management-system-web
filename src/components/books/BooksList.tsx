@@ -31,14 +31,31 @@ const BooksList: React.FC = () => {
         ...(search && { search }),
       });
       
+      console.log('Fetching books with params:', params.toString());
       const response = await api.get<PaginatedResponse<Book>>(`/books?${params}`);
+      console.log('Books response:', response.data);
       
-      setBooks(response.data.items);
-      setCurrentPage(response.data.currentPage);
-      setTotalPages(response.data.totalPages);
+      // Handle different response structures
+      if (response.data && Array.isArray(response.data)) {
+        // Direct array response
+        setBooks(response.data);
+        setCurrentPage(1);
+        setTotalPages(1);
+      } else if (response.data && response.data.items) {
+        // Paginated response
+        setBooks(response.data.items || []);
+        setCurrentPage(response.data.currentPage || 1);
+        setTotalPages(response.data.totalPages || 1);
+      } else {
+        // Empty or unexpected response
+        setBooks([]);
+        setCurrentPage(1);
+        setTotalPages(1);
+      }
     } catch (err) {
-      setError('Failed to fetch books');
       console.error('Error fetching books:', err);
+      setError('Failed to fetch books. Please make sure the backend server is running.');
+      setBooks([]);
     } finally {
       setLoading(false);
     }

@@ -1,11 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, PlusCircle, Search, TrendingUp } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
+import type { Book, PaginatedResponse } from '../types/api';
 
 const HomePage: React.FC = () => {
   const { user } = useAuth();
+  const [stats, setStats] = useState({
+    totalBooks: 0,
+    totalGenres: 0,
+    recentBooks: 0,
+    loading: true,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch books to calculate statistics
+        const response = await api.get<PaginatedResponse<Book>>('/books?page=1&limit=100');
+        console.log('HomePage stats response:', response.data);
+        
+        // Handle different response structures
+        let books: Book[] = [];
+        let totalBooks = 0;
+        
+        if (response.data && Array.isArray(response.data)) {
+          // Direct array response
+          books = response.data;
+          totalBooks = books.length;
+        } else if (response.data && response.data.items) {
+          // Paginated response
+          books = response.data.items || [];
+          totalBooks = response.data.total || books.length;
+        }
+        
+        // Calculate stats
+        const genres = new Set(books.filter(book => book.genre).map(book => book.genre));
+        const totalGenres = genres.size;
+        
+        // Count recent books (added in last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const recentBooks = books.filter(book => 
+          new Date(book.created_at) > sevenDaysAgo
+        ).length;
+
+        setStats({
+          totalBooks,
+          totalGenres,
+          recentBooks,
+          loading: false,
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        setStats(prev => ({ ...prev, loading: false }));
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -39,7 +94,9 @@ const HomePage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Books</p>
-              <p className="text-2xl font-bold text-gray-900">—</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.loading ? '—' : stats.totalBooks}
+              </p>
             </div>
             <BookOpen className="h-8 w-8 text-blue-600" />
           </div>
@@ -48,7 +105,9 @@ const HomePage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Genres</p>
-              <p className="text-2xl font-bold text-gray-900">—</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.loading ? '—' : stats.totalGenres}
+              </p>
             </div>
             <TrendingUp className="h-8 w-8 text-green-600" />
           </div>
@@ -57,7 +116,9 @@ const HomePage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Recent Additions</p>
-              <p className="text-2xl font-bold text-gray-900">—</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.loading ? '—' : stats.recentBooks}
+              </p>
             </div>
             <PlusCircle className="h-8 w-8 text-indigo-600" />
           </div>

@@ -1,69 +1,167 @@
-# React + TypeScript + Vite
+# Book Management Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for managing your personal book library.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication**: Secure login and registration with JWT tokens
+- **Dashboard**: Overview of your book collection with quick actions
+- **Book Management**: Full CRUD operations for books
+- **Search & Filter**: Find books by title, author, or genre
+- **Responsive Design**: Mobile-friendly interface with Tailwind CSS
+- **Real-time Updates**: Optimistic UI updates with React Query
 
-## Expanding the ESLint configuration
+## Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Routing**: React Router DOM
+- **State Management**: React Query (TanStack Query)
+- **HTTP Client**: Axios
+- **Icons**: Lucide React
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js (v18 or higher)
+- npm or yarn
+- Backend API server running (see backend README)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd book-management-frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:5173](http://localhost:5173) in your browser
+
+### Building for Production
+
+```bash
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Testing
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run test
 ```
+
+### Linting
+
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```
+src/
+├── components/           # Reusable UI components
+│   ├── auth/            # Authentication components
+│   ├── books/           # Book-related components
+│   └── ui/              # Generic UI components
+├── contexts/            # React contexts
+├── pages/               # Route components
+├── services/            # API services
+├── types/               # TypeScript type definitions
+└── App.tsx             # Main application component
+```
+
+## Key Components
+
+### Authentication
+- `LoginForm` - User login with validation
+- `RegisterForm` - User registration with validation
+- `AuthContext` - Global authentication state
+- `ProtectedRoute` - Route protection for authenticated users
+
+### Books Management
+- `BooksList` - Display and manage books with pagination
+- `BookForm` - Create and edit books
+- `BookCard` - Individual book display component
+
+### UI Components
+- `Button` - Reusable button component
+- `Input` - Form input component
+- `LoadingSpinner` - Loading state indicator
+- `ErrorMessage` - Error display component
+
+## API Integration
+
+The frontend communicates with the NestJS backend API:
+
+- **Authentication**: JWT-based authentication
+- **Books CRUD**: Full create, read, update, delete operations
+- **Pagination**: Server-side pagination for large datasets
+- **Search**: Real-time search functionality
+- **Error Handling**: Comprehensive error handling and user feedback
+
+## Features in Detail
+
+### Dashboard
+- Welcome message with user information
+- Quick stats about book collection
+- Quick action buttons for common tasks
+
+### Book Management
+- View all books in a responsive grid
+- Search books by title, author, or genre
+- Add new books with form validation
+- Edit existing books
+- Delete books with confirmation
+- Pagination for large collections
+
+### Responsive Design
+- Mobile-first approach
+- Responsive navigation
+- Adaptive layouts for different screen sizes
+- Touch-friendly interface
+
+## Environment Variables
+
+Create a `.env` file in the root directory:
+
+```
+VITE_API_URL=http://localhost:3000
+```
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Development Notes
+
+- The application uses React Query for efficient data fetching and caching
+- Form validation is handled with custom validation logic
+- Error boundaries are implemented for error handling
+- The UI follows modern design principles with Tailwind CSS
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
