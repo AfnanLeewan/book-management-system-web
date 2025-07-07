@@ -48,11 +48,11 @@ export interface AuthResponse {
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
+  items: T[];
   total: number;
-  page: number;
-  limit: number;
+  currentPage: number;
   totalPages: number;
+  limit: number;
 }
 
 export interface ApiError {
