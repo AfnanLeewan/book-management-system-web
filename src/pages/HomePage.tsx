@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, PlusCircle, Search, TrendingUp } from 'lucide-react';
-import Button from '../components/ui/Button';
+import { 
+  Box, 
+  Typography, 
+  Card, 
+  CardContent, 
+  Button, 
+  Container
+} from '@mui/material';
+import { 
+  BookOpen, 
+  PlusCircle, 
+  Search, 
+  TrendingUp 
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 import type { Book, PaginatedResponse } from '../types/api';
@@ -63,96 +75,173 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.firstName}!
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Manage your personal library and discover new books to read.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link to="/books">
-            <Button className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5" />
-              View My Books
-            </Button>
-          </Link>
-          <Link to="/books">
-            <Button variant="outline" className="flex items-center gap-2">
-              <PlusCircle className="h-5 w-5" />
-              Add New Book
-            </Button>
-          </Link>
-        </div>
-      </div>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {/* Welcome Section */}
+        <Card>
+          <CardContent sx={{ p: 3 }}>
+            <Typography variant="h3" sx={{ mb: 1, color: 'text.primary' }}>
+              Welcome back, {user?.firstName}!
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+              Manage your personal library and discover new books to read.
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+              <Button
+                component={Link}
+                to="/books"
+                variant="contained"
+                startIcon={<BookOpen size={20} />}
+                sx={{ px: 3 }}
+              >
+                View My Books
+              </Button>
+              <Button
+                component={Link}
+                to="/books"
+                variant="outlined"
+                startIcon={<PlusCircle size={20} />}
+                sx={{ px: 3 }}
+              >
+                Add New Book
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Books</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {stats.loading ? '—' : stats.totalBooks}
-              </p>
-            </div>
-            <BookOpen className="h-8 w-8 text-blue-600" />
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Genres</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {stats.loading ? '—' : stats.totalGenres}
-              </p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-green-600" />
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Recent Additions</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {stats.loading ? '—' : stats.recentBooks}
-              </p>
-            </div>
-            <PlusCircle className="h-8 w-8 text-indigo-600" />
-          </div>
-        </div>
-      </div>
+        {/* Quick Stats */}
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary', mb: 0.5 }}>
+                    Total Books
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                    {stats.loading ? '—' : stats.totalBooks}
+                  </Typography>
+                </Box>
+                <BookOpen size={32} style={{ color: '#2563eb' }} />
+              </Box>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary', mb: 0.5 }}>
+                    Genres
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                    {stats.loading ? '—' : stats.totalGenres}
+                  </Typography>
+                </Box>
+                <TrendingUp size={32} style={{ color: '#10b981' }} />
+              </Box>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary', mb: 0.5 }}>
+                    Recent Additions
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                    {stats.loading ? '—' : stats.recentBooks}
+                  </Typography>
+                </Box>
+                <PlusCircle size={32} style={{ color: '#6366f1' }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Link to="/books" className="block">
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
-              <BookOpen className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">Browse Books</p>
-              <p className="text-xs text-gray-500">View your collection</p>
-            </div>
-          </Link>
-          <Link to="/books" className="block">
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
-              <PlusCircle className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">Add Book</p>
-              <p className="text-xs text-gray-500">Add a new book to your library</p>
-            </div>
-          </Link>
-          <Link to="/books" className="block">
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
-              <Search className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">Search</p>
-              <p className="text-xs text-gray-500">Find books in your library</p>
-            </div>
-          </Link>
-        </div>
-      </div>
-    </div>
+        {/* Quick Actions */}
+        <Card>
+          <CardContent sx={{ p: 3 }}>
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
+              Quick Actions
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
+              <Card 
+                component={Link}
+                to="/books"
+                sx={{
+                  border: '2px dashed',
+                  borderColor: 'grey.300',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                    bgcolor: 'primary.50',
+                  }
+                }}
+              >
+                <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                  <BookOpen size={32} style={{ color: '#9ca3af', marginBottom: '8px' }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
+                    Browse Books
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    View your collection
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card 
+                component={Link}
+                to="/books"
+                sx={{
+                  border: '2px dashed',
+                  borderColor: 'grey.300',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                    bgcolor: 'primary.50',
+                  }
+                }}
+              >
+                <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                  <PlusCircle size={32} style={{ color: '#9ca3af', marginBottom: '8px' }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
+                    Add Book
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    Add a new book to your library
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card 
+                component={Link}
+                to="/books"
+                sx={{
+                  border: '2px dashed',
+                  borderColor: 'grey.300',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                    bgcolor: 'primary.50',
+                  }
+                }}
+              >
+                <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                  <Search size={32} style={{ color: '#9ca3af', marginBottom: '8px' }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
+                    Search
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    Find books in your library
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   );
 };
 
