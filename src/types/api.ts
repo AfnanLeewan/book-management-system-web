@@ -48,9 +48,9 @@ export interface AuthResponse {
 }
 
 export interface PaginatedResponse<T> {
-  items: T[];
+  data: T[];
   total: number;
-  currentPage: number;
+  page: number;
   totalPages: number;
   limit: number;
 }

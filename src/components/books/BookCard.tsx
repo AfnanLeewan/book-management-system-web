@@ -30,8 +30,8 @@ const BookCard: React.FC<BookCardProps> = ({ book, onEdit, onDelete }) => {
     <Card sx={{ transition: 'box-shadow 0.2s', '&:hover': { boxShadow: 4 } }}>
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-          <Box sx={{ flex: 1, mr: 2 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
+          <Box sx={{mr: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 1,display: 'flex'}}>
               {book.title}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -55,7 +55,8 @@ const BookCard: React.FC<BookCardProps> = ({ book, onEdit, onDelete }) => {
                 sx={{ 
                   backgroundColor: 'primary.50', 
                   color: 'primary.800',
-                  fontSize: '0.75rem'
+                    fontSize: '0.75rem'
+                  
                 }}
               />
             )}

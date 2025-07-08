@@ -46,10 +46,10 @@ const BooksList: React.FC = () => {
         setBooks(response.data);
         setCurrentPage(1);
         setTotalPages(1);
-      } else if (response.data && response.data.items) {
-        // Paginated response
-        setBooks(response.data.items || []);
-        setCurrentPage(response.data.currentPage || 1);
+      } else if (response.data && response.data.data) {
+        // Paginated response with data field
+        setBooks(response.data.data || []);
+        setCurrentPage(response.data.page || 1);
         setTotalPages(response.data.totalPages || 1);
       } else {
         // Empty or unexpected response
@@ -81,12 +81,18 @@ const BooksList: React.FC = () => {
       setFormLoading(true);
       setFormError(null);
       
+      console.log('Creating book with data:', data);
       const response = await api.post<Book>('/books', data);
+      console.log('Book created successfully:', response.data);
       
-      setBooks(prev => [response.data, ...prev]);
+      // Close the form first
       setIsFormOpen(false);
       setSelectedBook(undefined);
+      
+      // Refresh the books list from server to ensure consistency
+      await fetchBooks(currentPage, searchTerm);
     } catch (err: unknown) {
+      console.error('Error creating book:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to create book';
       setFormError(errorMessage);
       throw err;
@@ -102,16 +108,18 @@ const BooksList: React.FC = () => {
       setFormLoading(true);
       setFormError(null);
       
+      console.log('Updating book with data:', data);
       const response = await api.patch<Book>(`/books/${selectedBook.id}`, data);
+      console.log('Book updated successfully:', response.data);
       
-      setBooks(prev => 
-        prev.map(book => 
-          book.id === selectedBook.id ? response.data : book
-        )
-      );
+      // Close the form first
       setIsFormOpen(false);
       setSelectedBook(undefined);
+      
+      // Refresh the books list from server to ensure consistency
+      await fetchBooks(currentPage, searchTerm);
     } catch (err: unknown) {
+      console.error('Error updating book:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to update book';
       setFormError(errorMessage);
       throw err;
@@ -126,11 +134,15 @@ const BooksList: React.FC = () => {
     }
     
     try {
+      console.log('Deleting book with ID:', bookId);
       await api.delete(`/books/${bookId}`);
-      setBooks(prev => prev.filter(book => book.id !== bookId));
+      console.log('Book deleted successfully');
+      
+      // Refresh the books list from server to ensure consistency
+      await fetchBooks(currentPage, searchTerm);
     } catch (err) {
-      setError('Failed to delete book');
       console.error('Error deleting book:', err);
+      setError('Failed to delete book');
     }
   };
 

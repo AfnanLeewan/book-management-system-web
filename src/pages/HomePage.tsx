@@ -42,9 +42,9 @@ const HomePage: React.FC = () => {
           // Direct array response
           books = response.data;
           totalBooks = books.length;
-        } else if (response.data && response.data.items) {
-          // Paginated response
-          books = response.data.items || [];
+        } else if (response.data && response.data.data) {
+          // Paginated response with data field
+          books = response.data.data || [];
           totalBooks = response.data.total || books.length;
         }
         
