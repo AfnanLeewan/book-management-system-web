@@ -1,6 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Home, LogOut, User } from 'lucide-react';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Box, 
+  Container,
+  Button as MuiButton
+} from '@mui/material';
+import { MenuBook, Home, Logout, Person } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import Button from './ui/Button';
 
@@ -14,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'Books', href: '/books', icon: BookOpen },
+    { name: 'Books', href: '/books', icon: MenuBook },
   ];
 
   const handleLogout = () => {
@@ -22,87 +30,107 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link to="/" className="flex-shrink-0 flex items-center">
-                <BookOpen className="h-8 w-8 text-indigo-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900">
-                  BookManager
-                </span>
-              </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {navigation.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        location.pathname === item.href
-                          ? 'border-indigo-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4 mr-2" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-gray-700">
-                <User className="h-4 w-4 mr-1" />
+      <AppBar position="static" color="inherit" elevation={1}>
+        <Toolbar>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
+              <MenuBook sx={{ fontSize: 32, color: 'primary.main', mr: 1 }} />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                BookManager
+              </Typography>
+            </Link>
+            <Box sx={{ display: { xs: 'none', sm: 'flex' }, ml: 6 }}>
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <MuiButton
+                    key={item.name}
+                    component={Link}
+                    to={item.href}
+                    startIcon={<Icon />}
+                    sx={{
+                      mr: 4,
+                      py: 2,
+                      borderBottom: 2,
+                      borderColor: location.pathname === item.href ? 'primary.main' : 'transparent',
+                      borderRadius: 0,
+                      color: location.pathname === item.href ? 'text.primary' : 'text.secondary',
+                      '&:hover': {
+                        bgcolor: 'transparent',
+                        borderColor: 'grey.300',
+                        color: 'text.primary'
+                      }
+                    }}
+                  >
+                    {item.name}
+                  </MuiButton>
+                );
+              })}
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
+              <Person sx={{ fontSize: 16, mr: 0.5 }} />
+              <Typography variant="body2">
                 {user?.firstName} {user?.lastName}
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-                className="flex items-center"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
+              </Typography>
+            </Box>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              startIcon={<Logout />}
+            >
+              Logout
+            </Button>
+          </Box>
+        </Toolbar>
 
         {/* Mobile menu */}
-        <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
+        <Box sx={{ display: { xs: 'block', sm: 'none' }, borderTop: 1, borderColor: 'divider' }}>
+          <Box sx={{ py: 1 }}>
             {navigation.map((item) => {
               const Icon = item.icon;
               return (
-                <Link
+                <MuiButton
                   key={item.name}
+                  component={Link}
                   to={item.href}
-                  className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-                    location.pathname === item.href
-                      ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-                      : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
-                  }`}
+                  fullWidth
+                  startIcon={<Icon />}
+                  sx={{
+                    justifyContent: 'flex-start',
+                    pl: 3,
+                    py: 2,
+                    borderLeft: 4,
+                    borderRadius: 0,
+                    borderColor: location.pathname === item.href ? 'primary.main' : 'transparent',
+                    bgcolor: location.pathname === item.href ? 'primary.50' : 'transparent',
+                    color: location.pathname === item.href ? 'primary.main' : 'text.secondary',
+                    '&:hover': {
+                      bgcolor: 'grey.50',
+                      borderColor: 'grey.300',
+                      color: 'text.primary'
+                    }
+                  }}
                 >
-                  <Icon className="h-4 w-4 mr-2 inline" />
                   {item.name}
-                </Link>
+                </MuiButton>
               );
             })}
-          </div>
-        </div>
-      </nav>
+          </Box>
+        </Box>
+      </AppBar>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
+      <Container maxWidth="xl" sx={{ py: 3 }}>
+        <Box sx={{ px: { xs: 2, sm: 0 }, py: 3 }}>
           {children}
-        </div>
-      </main>
-    </div>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
