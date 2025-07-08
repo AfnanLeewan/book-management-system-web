@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Edit, Trash2, BookOpen } from 'lucide-react';
+import { 
+  Box, 
+  Typography
+} from '@mui/material';
+import { Search, Add, MenuBook } from '@mui/icons-material';
 import api from '../../services/api';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ErrorMessage from '../ui/ErrorMessage';
 import BookForm from './BookForm';
+import BookCard from './BookCard';
 import type { Book, CreateBookDto, UpdateBookDto, PaginatedResponse } from '../../types/api';
 
 const BooksList: React.FC = () => {
@@ -157,125 +162,87 @@ const BooksList: React.FC = () => {
 
   if (loading && books.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '256px' }}>
         <LoadingSpinner size="lg" />
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <BookOpen className="h-8 w-8 text-indigo-600" />
-          <h1 className="text-3xl font-bold text-gray-900">My Books</h1>
-        </div>
-        <Button onClick={handleAddBook} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: { xs: 'column', sm: 'row' }, 
+        alignItems: { sm: 'center' }, 
+        justifyContent: 'space-between',
+        gap: 2
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <MenuBook sx={{ fontSize: 32, color: 'primary.main' }} />
+          <Typography variant="h3" sx={{ fontWeight: 700, color: 'text.primary' }}>
+            My Books
+          </Typography>
+        </Box>
+        <Button onClick={handleAddBook} startIcon={<Add />}>
           Add Book
         </Button>
-      </div>
+      </Box>
 
       {/* Search */}
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <div className="flex-1">
+      <Box component="form" onSubmit={handleSearch} sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ flex: 1 }}>
           <Input
             type="text"
             placeholder="Search books by title, author, or genre..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
           />
-        </div>
+        </Box>
         <Button type="submit" variant="outline">
-          <Search className="h-4 w-4" />
+          <Search />
         </Button>
-      </form>
+      </Box>
 
       {/* Error Message */}
       {error && <ErrorMessage message={error} />}
 
       {/* Books Grid */}
       {books.length === 0 ? (
-        <div className="text-center py-12">
-          <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No books found</h3>
-          <p className="mt-1 text-sm text-gray-500">
+        <Box sx={{ textAlign: 'center', py: 6 }}>
+          <MenuBook sx={{ fontSize: 48, color: 'text.disabled', mx: 'auto', display: 'block', mb: 1 }} />
+          <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
+            No books found
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
             {searchTerm ? 'Try adjusting your search terms.' : 'Get started by adding your first book.'}
-          </p>
+          </Typography>
           {!searchTerm && (
-            <div className="mt-6">
-              <Button onClick={handleAddBook} className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Add Book
-              </Button>
-            </div>
+            <Button onClick={handleAddBook} startIcon={<Add />}>
+              Add Book
+            </Button>
           )}
-        </div>
+        </Box>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, 
+          gap: 3 
+        }}>
           {books.map((book) => (
-            <div key={book.id} className="card p-6 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {book.title}
-                  </h3>
-                  <div className="flex items-center text-gray-600 mb-2">
-                    <span className="text-sm">by {book.author}</span>
-                  </div>
-                  {book.published_year && (
-                    <div className="flex items-center text-gray-600 mb-2">
-                      <span className="text-sm">Published: {book.published_year}</span>
-                    </div>
-                  )}
-                  {book.genre && (
-                    <span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
-                      {book.genre}
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => handleEditBook(book)}
-                    className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors"
-                    title="Edit book"
-                  >
-                    <Edit className="h-4 w-4 text-gray-600" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteBook(book.id)}
-                    className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors"
-                    title="Delete book"
-                  >
-                    <Trash2 className="h-4 w-4 text-red-600" />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="text-xs text-gray-500 border-t pt-3">
-                Added {new Date(book.created_at).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}
-                {book.updated_at !== book.created_at && (
-                  <span> • Updated {new Date(book.updated_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}</span>
-                )}
-              </div>
-            </div>
+            <BookCard
+              key={book.id}
+              book={book}
+              onEdit={handleEditBook}
+              onDelete={(book) => handleDeleteBook(book.id)}
+            />
           ))}
-        </div>
+        </Box>
       )}
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-8">
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mt: 4 }}>
           <Button
             variant="outline"
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
@@ -283,9 +250,9 @@ const BooksList: React.FC = () => {
           >
             Previous
           </Button>
-          <span className="text-sm text-gray-700">
+          <Typography variant="body2" sx={{ color: 'text.secondary', mx: 2 }}>
             Page {currentPage} of {totalPages}
-          </span>
+          </Typography>
           <Button
             variant="outline"
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
@@ -293,7 +260,7 @@ const BooksList: React.FC = () => {
           >
             Next
           </Button>
-        </div>
+        </Box>
       )}
 
       {/* Book Form Modal */}
@@ -305,7 +272,7 @@ const BooksList: React.FC = () => {
         isLoading={formLoading}
         error={formError}
       />
-    </div>
+    </Box>
   );
 };
 
