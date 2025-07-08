@@ -18,6 +18,7 @@ const BooksList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeSearch, setActiveSearch] = useState(''); // The actual search term being used for API calls
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedBook, setSelectedBook] = useState<Book | undefined>(undefined);
@@ -67,13 +68,13 @@ const BooksList: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchBooks(currentPage, searchTerm);
-  }, [currentPage, searchTerm]);
+    fetchBooks(currentPage, activeSearch);
+  }, [currentPage, activeSearch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
-    fetchBooks(1, searchTerm);
+    setActiveSearch(searchTerm); // This will trigger the useEffect to fetch with the new search term
   };
 
   const handleCreateBook = async (data: CreateBookDto) => {
@@ -90,7 +91,7 @@ const BooksList: React.FC = () => {
       setSelectedBook(undefined);
       
       // Refresh the books list from server to ensure consistency
-      await fetchBooks(currentPage, searchTerm);
+      await fetchBooks(currentPage, activeSearch);
     } catch (err: unknown) {
       console.error('Error creating book:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to create book';
@@ -117,7 +118,7 @@ const BooksList: React.FC = () => {
       setSelectedBook(undefined);
       
       // Refresh the books list from server to ensure consistency
-      await fetchBooks(currentPage, searchTerm);
+      await fetchBooks(currentPage, activeSearch);
     } catch (err: unknown) {
       console.error('Error updating book:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to update book';
@@ -139,7 +140,7 @@ const BooksList: React.FC = () => {
       console.log('Book deleted successfully');
       
       // Refresh the books list from server to ensure consistency
-      await fetchBooks(currentPage, searchTerm);
+      await fetchBooks(currentPage, activeSearch);
     } catch (err) {
       console.error('Error deleting book:', err);
       setError('Failed to delete book');
@@ -227,9 +228,9 @@ const BooksList: React.FC = () => {
             No books found
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
-            {searchTerm ? 'Try adjusting your search terms.' : 'Get started by adding your first book.'}
+            {activeSearch ? 'Try adjusting your search terms.' : 'Get started by adding your first book.'}
           </Typography>
-          {!searchTerm && (
+          {!activeSearch && (
             <Button onClick={handleAddBook} startIcon={<Add />}>
               Add Book
             </Button>
