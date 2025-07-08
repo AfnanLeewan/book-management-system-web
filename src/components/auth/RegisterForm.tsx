@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Box, Typography } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
@@ -84,30 +85,44 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <Box 
+      sx={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        bgcolor: 'background.default',
+        py: 12,
+        px: { xs: 2, sm: 3, lg: 4 }
+      }}
+    >
+      <Box sx={{ maxWidth: 400, width: '100%' }}>
+        <Box sx={{ mb: 4, textAlign: 'center' }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', mb: 1 }}>
             Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Or{' '}
             <Link
               to="/login"
-              className="font-medium text-primary-600 hover:text-primary-500"
+              style={{ 
+                color: '#2563eb', 
+                textDecoration: 'none',
+                fontWeight: 500
+              }}
             >
               sign in to existing account
             </Link>
-          </p>
-        </div>
+          </Typography>
+        </Box>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {error && (
               <ErrorMessage message={error} onClose={clearError} />
             )}
             
-            <div className="grid grid-cols-2 gap-4">
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
               <Input
                 label="First name"
                 name="firstName"
@@ -131,7 +146,7 @@ const RegisterForm: React.FC = () => {
                 error={errors.lastName}
                 placeholder="Last name"
               />
-            </div>
+            </Box>
             
             <Input
               label="Email address"
@@ -169,21 +184,21 @@ const RegisterForm: React.FC = () => {
               error={errors.confirmPassword}
               placeholder="Confirm your password"
             />
-          </div>
+          </Box>
 
-          <div>
+          <Box sx={{ mt: 4 }}>
             <Button
               type="submit"
-              className="w-full"
               isLoading={isLoading}
               disabled={isLoading}
+              sx={{ width: '100%' }}
             >
               Create account
             </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
