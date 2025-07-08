@@ -28,8 +28,8 @@ const BooksList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSearch, setActiveSearch] = useState(''); // The actual search term being used for API calls
   const [selectedGenre, setSelectedGenre] = useState('');
-  const [sortBy, setSortBy] = useState<'title' | 'published_year'>('title');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortBy, setSortBy] = useState<'title' | 'published_year' | 'created_at' | 'updated_at'>('created_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [availableGenres, setAvailableGenres] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -103,9 +103,17 @@ const BooksList: React.FC = () => {
       if (sortBy === 'title') {
         aValue = a.title.toLowerCase();
         bValue = b.title.toLowerCase();
-      } else {
+      } else if (sortBy === 'published_year') {
         aValue = a.published_year || 0;
         bValue = b.published_year || 0;
+      } else if (sortBy === 'created_at') {
+        aValue = new Date(a.created_at).getTime();
+        bValue = new Date(b.created_at).getTime();
+      } else if (sortBy === 'updated_at') {
+        aValue = new Date(a.updated_at).getTime();
+        bValue = new Date(b.updated_at).getTime();
+      } else {
+        return 0;
       }
 
       if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
@@ -258,7 +266,7 @@ const BooksList: React.FC = () => {
           <Box sx={{ flex: 1 }}>
             <Input
               type="text"
-              placeholder="Search books by title, author, or genre..."
+              placeholder="Search books by title or author"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -298,10 +306,12 @@ const BooksList: React.FC = () => {
             <Select
               value={sortBy}
               label="Sort By"
-              onChange={(e) => setSortBy(e.target.value as 'title' | 'published_year')}
+              onChange={(e) => setSortBy(e.target.value as 'title' | 'published_year' | 'created_at' | 'updated_at')}
             >
+              <MenuItem value="created_at">Date Created</MenuItem>
+              <MenuItem value="updated_at">Date Updated</MenuItem>
               <MenuItem value="title">Title</MenuItem>
-              <MenuItem value="published_year">Year</MenuItem>
+              <MenuItem value="published_year">Year Published</MenuItem>
             </Select>
           </FormControl>
 
@@ -382,8 +392,16 @@ const BooksList: React.FC = () => {
             <Box sx={{ mb: 2 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Showing {filteredBooks.length} of {books.length} books
-                {sortBy === 'title' ? ' sorted by title' : ' sorted by year'}
-                {sortOrder === 'desc' ? ' (descending)' : ' (ascending)'}
+                {(() => {
+                  switch (sortBy) {
+                    case 'title': return ' sorted by title';
+                    case 'published_year': return ' sorted by year published';
+                    case 'created_at': return ' sorted by date created';
+                    case 'updated_at': return ' sorted by date updated';
+                    default: return '';
+                  }
+                })()}
+                {sortOrder === 'desc' ? ' (newest first)' : ' (oldest first)'}
               </Typography>
             </Box>
 

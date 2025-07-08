@@ -86,7 +86,7 @@ const HomePage: React.FC = () => {
             <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
               Manage your personal library and discover new books to read.
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' },justifyContent:'center'}}>
               <Button
                 component={Link}
                 to="/books"
@@ -95,15 +95,6 @@ const HomePage: React.FC = () => {
                 sx={{ px: 3 }}
               >
                 View My Books
-              </Button>
-              <Button
-                component={Link}
-                to="/books"
-                variant="outlined"
-                startIcon={<PlusCircle size={20} />}
-                sx={{ px: 3 }}
-              >
-                Add New Book
               </Button>
             </Box>
           </CardContent>
@@ -157,89 +148,6 @@ const HomePage: React.FC = () => {
             </CardContent>
           </Card>
         </Box>
-
-        {/* Quick Actions */}
-        <Card>
-          <CardContent sx={{ p: 3 }}>
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
-              Quick Actions
-            </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
-              <Card 
-                component={Link}
-                to="/books"
-                sx={{
-                  border: '2px dashed',
-                  borderColor: 'grey.300',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                  '&:hover': {
-                    borderColor: 'primary.main',
-                    bgcolor: 'primary.50',
-                  }
-                }}
-              >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <BookOpen size={32} style={{ color: '#9ca3af', marginBottom: '8px' }} />
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
-                    Browse Books
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    View your collection
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card 
-                component={Link}
-                to="/books"
-                sx={{
-                  border: '2px dashed',
-                  borderColor: 'grey.300',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                  '&:hover': {
-                    borderColor: 'primary.main',
-                    bgcolor: 'primary.50',
-                  }
-                }}
-              >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <PlusCircle size={32} style={{ color: '#9ca3af', marginBottom: '8px' }} />
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
-                    Add Book
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    Add a new book to your library
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card 
-                component={Link}
-                to="/books"
-                sx={{
-                  border: '2px dashed',
-                  borderColor: 'grey.300',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                  '&:hover': {
-                    borderColor: 'primary.main',
-                    bgcolor: 'primary.50',
-                  }
-                }}
-              >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <Search size={32} style={{ color: '#9ca3af', marginBottom: '8px' }} />
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
-                    Search
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    Find books in your library
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Box>
-          </CardContent>
-        </Card>
       </Box>
     </Container>
   );
