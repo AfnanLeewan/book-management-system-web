@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from './ui/LoadingSpinner';
 
@@ -12,9 +13,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <Box sx={{ 
+        minHeight: '100vh', 
+        bgcolor: 'background.default', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
         <LoadingSpinner size="lg" />
-      </div>
+      </Box>
     );
   }
 

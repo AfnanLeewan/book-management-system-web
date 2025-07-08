@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  Typography, 
+  IconButton,
+  Box
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import ErrorMessage from '../ui/ErrorMessage';
@@ -116,92 +125,91 @@ const BookForm: React.FC<BookFormProps> = ({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
+    <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
             {book ? 'Edit Book' : 'Add New Book'}
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+          </Typography>
+          <IconButton onClick={onClose} size="small">
+            <Close />
+          </IconButton>
+        </Box>
+      </DialogTitle>
+      
+      <DialogContent>
+        <Box component="form" onSubmit={handleSubmit} sx={{ pt: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            {error && (
+              <ErrorMessage message={error} />
+            )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <ErrorMessage message={error} />
-          )}
+            <Input
+              label="Title"
+              name="title"
+              type="text"
+              required
+              value={formData.title}
+              onChange={handleChange}
+              error={errors.title}
+              placeholder="Enter book title"
+            />
 
-          <Input
-            label="Title"
-            name="title"
-            type="text"
-            required
-            value={formData.title}
-            onChange={handleChange}
-            error={errors.title}
-            placeholder="Enter book title"
-          />
+            <Input
+              label="Author"
+              name="author"
+              type="text"
+              required
+              value={formData.author}
+              onChange={handleChange}
+              error={errors.author}
+              placeholder="Enter author name"
+            />
 
-          <Input
-            label="Author"
-            name="author"
-            type="text"
-            required
-            value={formData.author}
-            onChange={handleChange}
-            error={errors.author}
-            placeholder="Enter author name"
-          />
+            <Input
+              label="Published Year"
+              name="published_year"
+              type="number"
+              inputProps={{ min: 1000, max: new Date().getFullYear() }}
+              value={formData.published_year || ''}
+              onChange={handleChange}
+              error={errors.published_year}
+              placeholder="Enter publication year"
+            />
 
-          <Input
-            label="Published Year"
-            name="published_year"
-            type="number"
-            min="1000"
-            max={new Date().getFullYear()}
-            value={formData.published_year || ''}
-            onChange={handleChange}
-            error={errors.published_year}
-            placeholder="Enter publication year"
-          />
-
-          <Input
-            label="Genre"
-            name="genre"
-            type="text"
-            value={formData.genre}
-            onChange={handleChange}
-            error={errors.genre}
-            placeholder="Enter genre (optional)"
-          />
-
-          <div className="flex justify-end space-x-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              isLoading={isLoading}
-              disabled={isLoading}
-            >
-              {book ? 'Update Book' : 'Add Book'}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+            <Input
+              label="Genre"
+              name="genre"
+              type="text"
+              value={formData.genre}
+              onChange={handleChange}
+              error={errors.genre}
+              placeholder="Enter genre (optional)"
+            />
+          </Box>
+        </Box>
+      </DialogContent>
+      
+      <DialogActions sx={{ p: 3, gap: 1 }}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          disabled={isLoading}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          isLoading={isLoading}
+          disabled={isLoading}
+        >
+          {book ? 'Update Book' : 'Add Book'}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
