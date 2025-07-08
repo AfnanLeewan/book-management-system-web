@@ -1,42 +1,37 @@
 import React from 'react';
-import { AlertCircle, X } from 'lucide-react';
+import { Alert, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 interface ErrorMessageProps {
   message: string;
   onClose?: () => void;
-  className?: string;
+  severity?: 'error' | 'warning' | 'info' | 'success';
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ 
   message, 
-  onClose, 
-  className = '' 
+  onClose,
+  severity = 'error'
 }) => {
   return (
-    <div className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}>
-      <div className="flex">
-        <div className="flex-shrink-0">
-          <AlertCircle className="h-5 w-5 text-red-400" />
-        </div>
-        <div className="ml-3">
-          <p className="text-sm text-red-800">{message}</p>
-        </div>
-        {onClose && (
-          <div className="ml-auto pl-3">
-            <div className="-mx-1.5 -my-1.5">
-              <button
-                type="button"
-                onClick={onClose}
-                className="inline-flex rounded-md bg-red-50 p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50"
-              >
-                <span className="sr-only">Dismiss</span>
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+    <Alert 
+      severity={severity}
+      action={
+        onClose && (
+          <IconButton
+            aria-label="close"
+            color="inherit"
+            size="small"
+            onClick={onClose}
+          >
+            <Close fontSize="inherit" />
+          </IconButton>
+        )
+      }
+      sx={{ borderRadius: '0.375rem' }}
+    >
+      {message}
+    </Alert>
   );
 };
 

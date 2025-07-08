@@ -1,48 +1,86 @@
 import React from 'react';
-import LoadingSpinner from './LoadingSpinner';
+import { Button as MuiButton, CircularProgress } from '@mui/material';
+import type { ButtonProps as MuiButtonProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   children: React.ReactNode;
 }
 
+const StyledButton = styled(MuiButton)(() => ({
+  textTransform: 'none',
+  fontWeight: 500,
+  borderRadius: '0.375rem',
+  '&.Mui-disabled': {
+    opacity: 0.5,
+  },
+}));
+
 const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   isLoading = false,
   disabled,
-  className = '',
   children,
   ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
-  
-  const variantClasses = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500',
-    secondary: 'bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500',
-    outline: 'border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-primary-500',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
+  const getMuiVariant = () => {
+    switch (variant) {
+      case 'primary':
+        return 'contained';
+      case 'secondary':
+        return 'contained';
+      case 'outline':
+        return 'outlined';
+      case 'danger':
+        return 'contained';
+      default:
+        return 'contained';
+    }
   };
 
-  const sizeClasses = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base'
+  const getMuiColor = () => {
+    switch (variant) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'secondary';
+      case 'outline':
+        return 'primary';
+      case 'danger':
+        return 'error';
+      default:
+        return 'primary';
+    }
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const getMuiSize = () => {
+    switch (size) {
+      case 'sm':
+        return 'small';
+      case 'md':
+        return 'medium';
+      case 'lg':
+        return 'large';
+      default:
+        return 'medium';
+    }
+  };
 
   return (
-    <button
-      className={classes}
+    <StyledButton
+      variant={getMuiVariant()}
+      color={getMuiColor()}
+      size={getMuiSize()}
       disabled={disabled || isLoading}
+      startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : undefined}
       {...props}
     >
-      {isLoading && <LoadingSpinner size="sm" className="mr-2" />}
       {children}
-    </button>
+    </StyledButton>
   );
 };
 

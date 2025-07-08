@@ -1,28 +1,36 @@
 import React from 'react';
+import { CircularProgress, Box } from '@mui/material';
+import type { CircularProgressProps } from '@mui/material';
 
-interface LoadingSpinnerProps {
+interface LoadingSpinnerProps extends Omit<CircularProgressProps, 'size'> {
   size?: 'sm' | 'md' | 'lg';
-  className?: string;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = 'md', 
-  className = '' 
+  size = 'md',
+  ...props
 }) => {
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12'
+  const getSize = () => {
+    switch (size) {
+      case 'sm':
+        return 16;
+      case 'md':
+        return 32;
+      case 'lg':
+        return 48;
+      default:
+        return 32;
+    }
   };
 
   return (
-    <div 
-      className={`animate-spin rounded-full border-b-2 border-primary-600 ${sizeClasses[size]} ${className}`}
-      role="status"
-      aria-label="Loading"
-    >
-      <span className="sr-only">Loading...</span>
-    </div>
+    <Box display="flex" justifyContent="center" alignItems="center">
+      <CircularProgress 
+        size={getSize()} 
+        color="primary"
+        {...props}
+      />
+    </Box>
   );
 };
 
