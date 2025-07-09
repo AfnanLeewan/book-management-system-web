@@ -84,23 +84,6 @@ src/
 
 ## Key Components
 
-### Authentication
-- `LoginForm` - User login with validation
-- `RegisterForm` - User registration with validation
-- `AuthContext` - Global authentication state
-- `ProtectedRoute` - Route protection for authenticated users
-
-### Books Management
-- `BooksList` - Display and manage books with pagination
-- `BookForm` - Create and edit books
-- `BookCard` - Individual book display component
-
-### UI Components
-- `Button` - Reusable button component
-- `Input` - Form input component
-- `LoadingSpinner` - Loading state indicator
-- `ErrorMessage` - Error display component
-
 ## API Integration
 
 The frontend communicates with the NestJS backend API:
@@ -126,12 +109,6 @@ The frontend communicates with the NestJS backend API:
 - Delete books with confirmation
 - Pagination for large collections
 
-### Responsive Design
-- Mobile-first approach
-- Responsive navigation
-- Adaptive layouts for different screen sizes
-- Touch-friendly interface
-
 ## Environment Variables
 
 Create a `.env` file in the root directory:
@@ -139,29 +116,3 @@ Create a `.env` file in the root directory:
 ```
 VITE_API_URL=http://localhost:3000
 ```
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Development Notes
-
-- The application uses React Query for efficient data fetching and caching
-- Form validation is handled with custom validation logic
-- Error boundaries are implemented for error handling
-- The UI follows modern design principles with Tailwind CSS
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
